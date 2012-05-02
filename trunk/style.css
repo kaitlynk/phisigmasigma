@@ -1,0 +1,201 @@
+body {
+	margin: 0;
+	border-top: 5px solid #0084b4;
+	color: #555;
+	background-image: url(images/tile.gif);
+	font-family: arial, sans-serif;
+}
+.center {
+	margin: auto;
+	width: 800px;
+	font-family: arial, sans-serif;
+	z-index: -1;
+}
+img {
+	border: 0;
+}
+h1 {
+	font-family: "omnes-pro", arial, sans-serif;
+	font-size: 46px;
+	margin: 0;
+}
+h2 {
+	font-family: "omnes-pro", arial, sans-serif;
+	margin: 10px 0;
+}
+h3 {
+	font-family: "omnes-pro", arial, sans-serif;
+	margin: 0;
+	color: #999;
+}
+h4 {
+	color: #F3327F;
+	margin: 10px 0 4px 0;
+	font-family: arial, sans-serif;
+}
+p {
+	font-size: 14px;
+}
+.ribbon {
+	background-color: #F3327F;
+	height: 40px;
+	color: white;
+}
+#ribbon_bottom {
+	background-color: #333333;
+	color: white;
+	opacity: 0.9;
+	text-align: right;
+	padding: 0.5em 1em;
+}
+#ribbon_bottom:after, #ribbon_bottom:before {
+	 content: "";
+	 position: absolute;
+	 display: block;
+	 bottom: 0;
+	 border: 0;
+	 z-index: -1;
+}
+
+.logo {
+	font-size: 18px;
+}
+.ribbon_loggedin {
+	background-color: #F3327F;
+	height: 60px;
+	padding-top: 20px;
+	color: white;
+}
+ul {
+	float: left;
+	list-style: none;
+	font-weight: bold;
+	font-size: 16px;
+	margin: 0;
+	font-family: arial narrow, sans-serif;
+}
+li {
+	float: left;
+	height:36px;
+	line-height: 40px;
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;
+}
+.ribbon li:hover {
+	border-bottom: 4px solid white;
+}
+.content {
+	margin: -40px auto;
+	position: relative;
+	width: 740px;
+	border-color: #eee;
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	padding: 10px;
+	color: #555;
+	margin-bottom: 20px;
+	background-color: white;
+	box-shadow: 0 2px 3px rgba(0,0,0,.3);
+}
+.twitter {
+	float: right;
+	display: block;
+}
+.clear {
+	clear: both;
+}
+.module {
+	box-shadow: 0 2px 3px rgba(0,0,0,.3);
+	border-top: 4px solid #F3327F;
+	margin-top: 10px;
+	color: #555;
+	padding: 10px;
+	background-color: white;
+}
+.login_button {
+	float: right;
+	height: 30px;
+	color: white;
+	text-decoration: none;
+	background-color: #F3327F;
+	border-radius: 6px;
+	margin-top: 4px;
+	border: 0;
+}
+.login_button:hover {
+	color: #F3327F;
+	background-color: white;
+}
+.login_button:active {
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7) inset;
+}
+.login {
+	display: none;
+	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
+	text-align: right;
+	color: white;
+}
+.login .center {
+	background-color: #0084b4;
+	padding-right: 20px;
+	padding-top: 5px;
+	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
+}
+.login p {
+	margin : 0;
+}
+.text {
+	height: 24px;
+	margin: 0 0 15px 0;
+	width: 200px;
+}
+
+/* Ribbon */
+.ribbon {
+ font-size: 18px !important;
+ /* This ribbon is based on a 16px font side and a 24px vertical rhythm. I've used em's to position each element for scalability. If you want to use a different font size you may have to play with the position of the ribbon elements */
+ width: 800px;
+ position: relative;
+ background: #F3327F;
+ color: #fff;
+ text-align: center;
+ padding: 1em 1em; /* Adjust to suit */
+ margin: 0;
+ left: -1em;
+ font-family: "omnes-pro", arial, sans-serif;
+}
+.ribbon:before, .ribbon:after {
+ content: "";
+ position: absolute;
+ display: block;
+ bottom: -1em;
+ border: 1.5em solid #ff73ab;
+ z-index: -1;
+}
+.ribbon:before {
+ left: -5em;
+ border-right-width: 4.5em;
+ border-left-color: transparent;
+}
+.ribbon:after {
+ right: -5em;
+ border-left-width: 4.5em;
+ border-right-color: transparent;
+}
+.ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
+ content: "";
+ position: absolute;
+ display: block;
+ border-style: solid;
+ border-color: #804f7c transparent transparent transparent;
+ bottom: -1em;
+}
+.ribbon .ribbon-content:before {
+ left: 0;
+ border-width: 1em 0 0 1em;
+}
+.ribbon .ribbon-content:after {
+ right: 0;
+ border-width: 1em 1em 0 0;
+}
