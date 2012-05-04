@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -10,14 +11,30 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
-	<div class="ribbon">
-		<div class="center">
+	<?php
+		if (!isset($_SESSION['logged_user'])) {
+			
+			$_SESSION['logged_user'] = $_POST['username'];
+		}
+	?>
+
+	<div class="center">
+		<div class="ribbon">
 			<ul>
-				<li class="logo">ΦΣΣ</li>
-				<li>HOME</li>
+				<a href="index.php"><li class="logo">ΦΣΣ</li></a>
+				<a href="dashboard.php"><li>HOME</li></a>
 				<li>ABOUT</li>
+			<?php if (isset($_SESSION['logged_user'])) {
+				echo "<li>EVENTS</li>
+				<li>PHOTOS</li>";
+			} ?>
 				<li>CONTACT</li>
 			</ul>
+			<div class="user">
+				Welcome, <?php echo $_SESSION['logged_user'];?>!
+				<br>
+				<a class="logout" href="logout.php">Logout</a>
+			</div>		
 		</div>
 	</div>
 	<div class="ribbon_bottom">
