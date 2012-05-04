@@ -81,6 +81,7 @@ li {
 	width: 100px;
 	text-align: center;
 	vertical-align: middle;
+	color: white;
 }
 .ribbon li:hover {
 	border-bottom: 4px solid white;
@@ -113,6 +114,21 @@ li {
 	padding: 10px;
 	background-color: white;
 }
+.user {
+	float: right;
+	height: 30px;
+	color: white;
+	text-decoration: none;
+	background-color: #F3327F;
+	font-size: 15px;
+	font-weight: normal;
+}
+.logout {
+	font-size: 10px;
+	color: #FFFFCC;
+	text-decoration: none;
+	font-style: normal;
+}
 .login_button {
 	float: right;
 	height: 30px;
@@ -132,6 +148,12 @@ li {
 }
 .login {
 	display: none;
+	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
+	text-align: right;
+	color: white;
+}
+.login_show {
+	display: show;
 	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
 	text-align: right;
 	color: white;
