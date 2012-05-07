@@ -1,10 +1,5 @@
-<?php 
-session_start();
-/*
-if (!isset($_SESSION['logged_user']))
-	header("location: index.php");
-	*/
-?>
+<?php session_start(); ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -17,26 +12,28 @@ if (!isset($_SESSION['logged_user']))
 </head>
 <body>
 	<?php
-	/*
 		if (!isset($_SESSION['logged_user'])) {
 			$_SESSION['logged_user'] = $_POST['username'];
 		}
-		*/
 	?>
 
-	<div class="ribbon_loggedin">
-		<div class="center">
+	<div class="center">
+		<div class="ribbon">
 			<ul>
-				<li class="logo">ΦΣΣ</li>
-				<li><a href="index.php">HOME</a></li>
-				<li>EVENTS</li>
-				<li>PHOTOS</li>
+				<a href="index.php"><li class="logo">Œ¶Œ£Œ£</li></a>
+				<a href="dashboard.php"><li>HOME</li></a>
+				<li>ABOUT</li>
+			<?php if (isset($_SESSION['logged_user'])) {
+				echo "<li>EVENTS</li>
+				<li>PHOTOS</li>";
+			} ?>
+				<li>CONTACT</li>
 			</ul>
-
-				<!-Welcome, <?php //echo $_SESSION['logged_user'];?>!-->
-				<button class="login_button">
-					<a href="logout.php">Logout</a>
-				</button>
+			<div class="user">
+				Welcome, <?php echo $_SESSION['logged_user'];?>!
+				<br>
+				<a class="logout" href="logout.php">Logout</a>
+			</div>		
 		</div>
 	</div>
 	<div class="ribbon_bottom">
@@ -70,8 +67,19 @@ if (!isset($_SESSION['logged_user']))
 			</h3>
 			<p>
 				Submit your vote for sister of the month.
+				<!-- Connect to FinalProj database
+				Select name from choices
+				Radio button next to each name
+				If POST[choice] is set
+					Update choices set pollid=pollid+1 where POST[choice]=name
+					Select name, max(pollid) from choices
+					Echo result -->
 			</p>
 		</div>
+		
+		<!-- Notifications
+			Select type from notifications joins notificationsviewed
+			Echo result -->
 	</div>
 </body>
 </html>
