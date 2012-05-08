@@ -22,12 +22,11 @@
 			<ul>
 				<a href="index.php"><li class="logo">ΦΣΣ</li></a>
 				<a href="dashboard.php"><li>HOME</li></a>
-				<li>ABOUT</li>
-			<?php if (isset($_SESSION['logged_user'])) {
-				echo "<li>EVENTS</li>
-				<li>PHOTOS</li>";
-			} ?>
-				<li>CONTACT</li>
+				<a href="history.php"><li>HISTORY</li></a>
+				<a href='events.php'><li>EVENTS</li></a>
+				<a href='blog.php'><li>BLOGS</li></a>
+				<a href="photos.php"><li>PHOTOS</li></a>
+				<a href="contact.php"><li>CONTACT</li></a>
 			</ul>
 			<div class="user">
 				Welcome, <?php echo $_SESSION['logged_user'];?>!
@@ -35,20 +34,18 @@
 				<a class="logout" href="logout.php">Logout</a>
 			</div>		
 		</div>
-	</div>
-	<div class="ribbon_bottom">
-		<div class="center">
+		<h1 id="ribbon_bottom" class="ribbon">
+			<strong class="ribbon-content">Phi Sigma Sigma</strong>
+		</h1>
+		<div class='module'>
 			<h2>
-				Dashboard
+				Admin Dashboard
 			</h2>
-		</div>
-	</div>
-	<div class="center">
 		<!-- Add Blogpost
 			If POST[blogcontent], POST[title] is set
 				Get currdate
-				Insert into blogposts values(id, POST[title], POST[blogcontent], currdate, currdate) -->
-				Insert into notifications values(currdate, actionid, blog)
+				Insert into blogposts values(id, POST[title], POST[blogcontent], currdate, currdate) 
+				Insert into notifications values(currdate, actionid, blog) -->
 		<!-- Edit Blogpost
 			Connect to final proj database
 			Select title from blogposts
@@ -65,43 +62,21 @@
 				Get currdate
 				Insert into notifications values(currdate, actionid, event) -->
 	
-		<div class="module" id="newuser">
+		<div id="newuser">
 			<!-- Add User -->
-			<?php
-				$con = mysql_connect('localhost','root','kkk524425kk');
-				if (!$con) {
-  					die('Could not connect: ' . mysql_error());
- 				}
- 				mysql_select_db('test_Final_Project', $con);
- 				$un = $_SESSION['logged_user'];
- 				$users = mysql_query('SELECT isAdmin FROM users WHERE username='.$un);
- 				echo mysql_fetch_row($users)."hi";
- 				if (mysql_fetch_row($users) == 1) {
- 					if (isset($_POST['newusername']) && isset($_POST['newpw'])) {
- 						$newun = $_POST['newusername'];
- 						$newpw = $_POST['newpw'];
- 						if ($_POST['isadmin'] == 'isadmin') {
- 							mysql_query('INSERT INTO users VALUES($newun,$newpw, 1');
- 						}
- 						else {
- 							mysql_query('INSERT INTO users VALUES($newun,$newpw, 0');
- 						}
- 					}
+
  					
-				 	echo "<h3>
-							Add User
-						</h3>
-						<p>
-							<form id='adduser' action='dashboard.php' method='post'>
-								Username: <input type='text' name='newusername'/>
-								Password: <input type='password' name='newpw'/>
-								<input type='checkbox' name='isadmin' value='isadmin'/> Admin
-								<input type='submit' name='submit' value='Create'/>
-							</form>
-						</p>";
-				}
- 				
-			?>
+			<h3>
+				Add User
+			</h3>
+			<p>
+				<form id='adduser' action='dashboard.php' method='post'>
+					Username: <input type='text' name='newusername'/><br>
+					Password: <input type='password' name='newpw'/><br>
+					<input type='checkbox' name='isadmin' value='isadmin'/> Make Administrator <br>
+					<input type='submit' name='submit' value='Create'/>
+				</form>
+			</p>
 		</div>
 	</div>
 
