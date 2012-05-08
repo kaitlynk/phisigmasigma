@@ -64,12 +64,13 @@
 						<a href="index.php"><li class="logo">ΦΣΣ</li></a>
 						<?php if (isset($_SESSION['logged_user'])) {
 							echo "<a href='dashboard.php'><li>HOME</li></a>"; } ?>
-						<li>ABOUT</li>
+						<a href="history.php"><li>HISTORY</li></a>
 						<?php if (isset($_SESSION['logged_user'])) {
-							echo "<li>EVENTS</li> 
-							<li>PHOTOS</li>";}
+							echo "<a href='events.php'><li>EVENTS</li></a>
+							<a href='blog.php'><li>BLOGS</li></a>";}
 						?>
-						<li>CONTACT</li>
+						<a href='photos.php'><li>PHOTOS</li></a>
+						<a href='contact.php'><li>CONTACT</li></a>
 					</ul>
 				</strong>
 					<?php

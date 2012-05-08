@@ -45,11 +45,11 @@
                 <div class="center">
                         <form id='login' action='index.php' method='post'>
                         <p>
-                                username
+                        	username
                         </p>
                         <input name="username" type="text" class="text"/>
                         <p>
-                                password
+                         	password
                         </p>
                         <input type="password" name="pw" class="text"/>
                         <br>
@@ -58,41 +58,45 @@
                         <br>
                 </div>
         </div>
-                <div class="center">
-                        <h1 class="ribbon">
-                                <strong class="ribbon-content">
-                                        <ul>
-                                                <a href="index.php"><li class="logo">ΦΣΣ</li></a>
-                                                <?php if (isset($_SESSION['logged_user'])) {
-                                                        echo "<a href='dashboard.php'><li>HOME</li></a>"; } ?>
-                                                <li>ABOUT</li>
-                                                <?php if (isset($_SESSION['logged_user'])) {
-                                                        echo "<li>EVENTS</li> 
-                                                        <li>PHOTOS</li>";}
-                                                ?>
-                                                <li>CONTACT</li>
-                                        </ul>
-                                </strong>
-                                        <?php
-                                                if (isset($_SESSION['logged_user'])) {
-                                                        echo "<div class='user'>
-                                                                Welcome, ".$_SESSION['logged_user']."!<br>
-                                                                <a class='logout' href='logout.php'>Logout</a></div>";
-                                                
-                                                }       
-                                                else {
-                                                        echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
-                                                        Login
-                                                        </button>";
-                                                }
-                                        ?>
-                        </h1>
-                        <h1 id="ribbon_bottom" class="ribbon">
-                                <strong class="ribbon-content">Phi Sigma Sigma</strong>
-                        </h1>
-                        <img src="images/home1.png" alt="home"/>
-                </div>
-
+        <div class="center">
+			<h1 class="ribbon">
+				<strong class="ribbon-content">
+					<ul>
+						<a href='index.php'><li class="logo">ΦΣΣ</li></a>
+						<?php 
+							if (isset($_SESSION['logged_user'])) {
+                        		echo "<a href='dashboard.php'><li>HOME</li></a>"; 
+                        	} 
+                        ?>
+                       	<a href="history.php"><li>HISTORY</li></a>
+                      	<?php 
+                      		if (isset($_SESSION['logged_user'])) {
+                     			echo "<a href='events.php'><li>EVENTS</li></a>
+                     			<a href='blog.php'><li>BLOGS</li></a>";
+                       		}
+                    	?>
+                    	<a href='photos.php'><li>PHOTOS</li></a>
+                    	<a href="contact.php"><li>CONTACT</li></a>
+               		 </ul>
+                </strong>
+				<?php
+					if (isset($_SESSION['logged_user'])) {
+                    	echo "<div class='user'>
+                    	Welcome, ".$_SESSION['logged_user']."!<br>
+                     	<a class='logout' href='logout.php'>Logout</a></div>";
+                  	}       
+            		else {
+                 		echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
+                		Login
+               			</button>";
+          			}
+				?>
+			</h1>
+			<h1 id="ribbon_bottom" class="ribbon">
+				<strong class="ribbon-content">Phi Sigma Sigma</strong>
+			</h1>
+			<img src="images/home1.png" alt="home"/>
+		</div>
         <div class="content">
                 <div class="twitter">
                                 <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
