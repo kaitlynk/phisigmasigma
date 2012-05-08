@@ -19,22 +19,27 @@
 
         <div class="center">
                 <div class="ribbon">
-                        <ul>
-                                <a href="index.php"><li class="logo">ΦΣΣ</li></a>
-                                <a href="dashboard.php"><li>HOME</li></a>
-                                <li>ABOUT</li>
-                        <?php if (isset($_SESSION['logged_user'])) {
-                                echo "<li>EVENTS</li>
-                                <li>PHOTOS</li>";
-                        } ?>
-                                <li>CONTACT</li>
-                        </ul>
-                        <div class="user">
-                                Welcome, <?php echo $_SESSION['logged_user'];?>!
-                                <br>
-                                <a class="logout" href="logout.php">Logout</a>
-                        </div>          
-                </div>
+                	<strong class="ribbon-content">
+                		<ul>
+							<a href='index.php'><li class="logo">ΦΣΣ</li></a>
+                        	<?php if (isset($_SESSION['logged_user'])) {
+                        		echo "<a href='dashboard.php'><li>HOME</li></a>"; } 
+                        	?>
+                            <a href="history.php"><li>HISTORY</li></a>
+                            <?php if (isset($_SESSION['logged_user'])) {
+                            	echo "<a href='events.php'><li>EVENTS</li></a>
+                            	<a href='blog.php'><li>BLOGS</li></a>";}
+                            ?>
+                            <a href='photos.php'><li>PHOTOS</li></a>
+                           	<a href="contact.php"><li>CONTACT</li></a>
+						</ul>
+					</strong>
+					<div class="user">
+						Welcome, <?php echo $_SESSION['logged_user'];?>!
+						<br>
+						<a class="logout" href="logout.php">Logout</a>
+					</div>          
+				</div>
         </div>
         <div class="ribbon_bottom">
                 <div class="center">
