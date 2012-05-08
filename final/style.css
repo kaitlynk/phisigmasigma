@@ -36,6 +36,10 @@ h4 {
 h5 {
 	font-weight: normal;
 }
+h6 {
+	color: white;
+	line-height: 5%;
+}
 p {
 	font-size: 14px;
 }
@@ -59,7 +63,6 @@ p {
 	 border: 0;
 	 z-index: -1;
 }
-
 .logo {
 	font-size: 18px;
 }
@@ -168,6 +171,15 @@ li {
 	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
 }
 .login p {
+	margin : 0;
+}
+.login_show .center {
+	background-color: #0084b4;
+	padding-right: 20px;
+	padding-top: 5px;
+	box-shadow: 2px 2px 3px rgba(0,0,0,.3) inset;
+}
+.login_show p {
 	margin : 0;
 }
 .text {
