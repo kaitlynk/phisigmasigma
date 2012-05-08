@@ -33,6 +33,9 @@ h4 {
 	margin: 10px 0 4px 0;
 	font-family: arial, sans-serif;
 }
+h5 {
+	font-weight: normal;
+}
 p {
 	font-size: 14px;
 }
@@ -220,4 +223,7 @@ li {
 .ribbon .ribbon-content:after {
  right: 0;
  border-width: 1em 1em 0 0;
+}
+.allusers {
+ display: none;
 }

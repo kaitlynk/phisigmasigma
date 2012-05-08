@@ -40,18 +40,36 @@
                            	<a href="contact.php"><li>CONTACT</li></a>
                                         </ul>
                                 </strong>
-                            <?php
-                            	if (isset($_SESSION['logged_user'])) {
-                            		echo "<div class='user'>
-                                 	Welcome, ".$_SESSION['logged_user']."!<br>
-                                 	<a class='logout' href='logout.php'>Logout</a></div>";
-                                }       
-                            	else {
-                                	echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
-                                	Login
-                               		</button>";
-                               	}
-                        	?>
+                            				<?php
+					if (isset($_SESSION['logged_user'])) {
+                    	echo "<div class='user'>
+                    	Welcome, ";
+                    	
+                    	$con = mysql_connect("localhost","root","kkk524425kk");
+                    	
+						if (!$con) {
+                       		die('Could not connect: '. mysql_error());
+                   		}
+                   		
+                   		mysql_select_db("test_Final_Project", $con);
+                   		
+               			$un = $_SESSION['logged_user'];
+               			$admin = mysql_query("SELECT isAdmin FROM users WHERE username='".$un."'");
+               			if (mysql_result($admin, 0) == 1) {
+							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
+						}
+						else {
+							echo $un."!";
+						}
+						echo "<br>
+                    	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";
+                  	}       
+            		else {
+                 		echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
+                		Login
+               			</button>";
+          			}
+				?>
                         </h1>
 					</ul>
 					</strong>
