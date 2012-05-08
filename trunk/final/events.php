@@ -60,29 +60,8 @@
    				<strong class="ribbon-content">Phi Sigma Sigma</strong>
 			</h1>
 			<div class="module">
-				<h3>
-					This is a blog post title.
-				</h3>
-				<h4>
-					May 4, 2012 at 1:00pm
-				</h4>
-				<p>
-					This is filler text. This is where the content of the blog post will go. Below is video which can be embedded in a blog post.
-				</p>
-				<iframe width="420" height="315" src="http://www.youtube.com/embed/jYciRQDkYD4" frameborder="0" allowfullscreen></iframe>
-			</div>
-			<div class="module">
-				<h3>
-					This is another title.
-				</h3>
-				<h4>
-					May 4, 2012 at 1:00pm
-				</h4>
-				<p>
-					At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi.
-				</p>
-				<img src="http://namclo.linguistlist.org/images/Cornell3.jpg" alt="photo"/>
-			</div>
-		</div>
+				<h2>
+					Events
+				</h2>
 </body>
 </html>

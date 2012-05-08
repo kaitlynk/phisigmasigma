@@ -19,31 +19,45 @@
 
 	<div class="center">
 		<div class="ribbon">
-			<ul>
-				<a href="index.php"><li class="logo">ΦΣΣ</li></a>
-				<a href="dashboard.php"><li>HOME</li></a>
-				<li>ABOUT</li>
-			<?php if (isset($_SESSION['logged_user'])) {
-				echo "<li>EVENTS</li>
-				<li>PHOTOS</li>";
-			} ?>
-				<li>CONTACT</li>
-			</ul>
-			<div class="user">
-				Welcome, <?php echo $_SESSION['logged_user'];?>!
-				<br>
-				<a class="logout" href="logout.php">Logout</a>
-			</div>		
+			<strong class="ribbon-content">
+				<ul>
+					<a href='index.php'><li class="logo">ΦΣΣ</li></a>
+					<?php 
+						if (isset($_SESSION['logged_user'])) {
+                    		echo "<a href='dashboard.php'><li>HOME</li></a>"; 
+                    	} 
+                	?>
+                	<a href="history.php"><li>HISTORY</li></a>
+                	<?php 
+                   		if (isset($_SESSION['logged_user'])) {
+               				echo "<a href='events.php'><li>EVENTS</li></a>
+                    		<a href='blog.php'><li>BLOGS</li></a>";
+                    	}
+               		?>
+                	<a href='photos.php'><li>PHOTOS</li></a>
+               		<a href="contact.php"><li>CONTACT</li></a>
+				</ul>
+			</strong>
+			<?php
+				if (isset($_SESSION['logged_user'])) {
+            		echo "<div class='user'>
+           			Welcome, ".$_SESSION['logged_user']."!<br>
+                    <a class='logout' href='logout.php'>Logout</a></div>";
+             	}       
+           		else {
+                	echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
+                	Login
+	           		</button>";
+	          	}
+			?>
 		</div>
-	</div>
-	<div class="ribbon_bottom">
-		<div class="center">
+		<h1 id="ribbon_bottom" class="ribbon">
+   				<strong class="ribbon-content">Phi Sigma Sigma</strong>
+		</h1>
+		<div class="module">
 			<h2>
-				Dashboard
+				Albums
 			</h2>
-		</div>
-	</div>
-	<div class="center">
 		<!-- View Photos
 			Connect to FinalProj Database
 			Select path_small from photos

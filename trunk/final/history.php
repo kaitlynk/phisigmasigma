@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,30 +13,54 @@
 <body>
 	<div class="login">
 		<div class="center">
-			<p>
-				username
-			</p>
-			<input type="text" class="text"/>
-			<p>
-				password
-			</p>
-			<input type="text" class="text"/>
+        	<form id='login' action='index.php' method='post'>
+        		<p>
+            		username
+        		</p>
+       			<input name="username" type="text" class="text"/>
+          		<p>
+          			password
+        		</p>
+         		<input type="password" name="pw" class="text"/>
+           		<br>
+        		<input type='submit' value='Log In' action='usercheck();'>
+          	</form>
+            <br>
 		</div>
 	</div>
 		<div class="center">
 			<h1 class="ribbon">
 				<strong class="ribbon-content">
 					<ul>
-						<li class="logo">ΦΣΣ</li>
-						<li><a href="index.php">HOME</a></li>
-						<li><a href="contact.php">CONTACT</a></li>
-						<li><a href="history.php">HISTORY</a></li>
-						<li><a href="blog.php">BLOG</a></li>
+						<a href="index.php"><li class="logo">ΦΣΣ</li></a>
+						<?php 
+							if (isset($_SESSION['logged_user'])) {
+                        		echo "<a href='dashboard.php'><li>HOME</li></a>"; 
+                        	} 
+                        ?>
+                       	<a href="history.php"><li>HISTORY</li></a>
+                      	<?php 
+                      		if (isset($_SESSION['logged_user'])) {
+                     			echo "<a href='events.php'><li>EVENTS</li></a>
+                     			<a href='blog.php'><li>BLOGS</li></a>";
+                       		}
+                    	?>
+                    	<a href='photos.php'><li>PHOTOS</li></a>
+                    	<a href="contact.php"><li>CONTACT</li></a>
 					</ul>
-					<button class="login_button" onclick="$('.login').slideToggle();">
-						Login
-					</button>
 				</strong>
+				<?php
+					if (isset($_SESSION['logged_user'])) {
+						echo "<div class='user'>
+						Welcome, ".$_SESSION['logged_user']."!<br>
+						<a class='logout' href='logout.php'>Logout</a></div>";
+                 	}       
+                    else {
+						echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
+						Login
+                        </button>";
+                   	}
+				?>
 			</h1>
 			<h1 id="ribbon_bottom" class="ribbon">
    				<strong class="ribbon-content">Phi Sigma Sigma</strong>
