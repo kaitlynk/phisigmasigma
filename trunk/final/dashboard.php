@@ -64,17 +64,16 @@
                			</button>";
           			}
 				?>        
-				</div>
-        </div>
-        <div class="ribbon_bottom">
-                <div class="center">
-                        <h2>
-                                Dashboard
-                        </h2>
-                </div>
-        </div>
-        <div class="center">
-                <div class="module" id="events">
+			</div>
+		</div>
+        	<h1 id="ribbon_bottom" class="ribbon">
+   				<strong class="ribbon-content">Phi Sigma Sigma</strong>
+			</h1>
+			<div class = 'module'>
+            	<h2>
+                	Dashboard
+            	</h2>
+           	<div id="events">
                         <h3>
                                 Events
                         </h3>
@@ -91,6 +90,7 @@
                                 Day After Slope Day Party!
                         </p>
                 </div>
+           </div>
                 <div class="module">
                         <h3>
                                 Sister of the Month

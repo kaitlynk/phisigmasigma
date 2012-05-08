@@ -14,3 +14,10 @@ function adduser() {
 		return false;
 	}
 }
+
+function usercheck() {
+	if (document.login.username.value == "" || document.login.pw.value == "") {
+		alert('Please enter both a username and password.');
+		return false;
+	}
+}

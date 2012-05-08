@@ -11,11 +11,23 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
-	<?php
-		if (!isset($_SESSION['logged_user'])) {
-			$_SESSION['logged_user'] = $_POST['username'];
-		}
-	?>
+	<div class="login">
+		<div class="center">
+        	<form id='login' action='index.php' method='post'>
+        		<p>
+            		username
+        		</p>
+       			<input name="username" type="text" class="text"/>
+          		<p>
+          			password
+        		</p>
+         		<input type="password" name="pw" class="text"/>
+           		<br>
+        		<input type='submit' value='Log In' action='usercheck();'>
+          	</form>
+            <br>
+		</div>
+	</div>
 
 	<div class="center">
 		<div class="ribbon">
@@ -60,7 +72,7 @@
 							echo $un."!";
 						}
 						echo "<br>
-                    	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";
+                    	<div class='user'><a class='logout' href='logout.php'>Logout</a></div></div>";
                   	}       
             		else {
                  		echo "<button class='login_button' onclick=\"$('.login').slideToggle();\">
@@ -68,7 +80,6 @@
                			</button>";
           			}
 				?>
-			</div>
 		</div>
 		<h1 id="ribbon_bottom" class="ribbon">
    				<strong class="ribbon-content">Phi Sigma Sigma</strong>

@@ -17,6 +17,7 @@
                 $isright = false;
                 if (!isset($_SESSION['logged_user'])) {
                         if (!isset($_POST['username'])) {
+                        	echo "<div class='login'><div class='center'>";
                         }
                         else {
                                 $user = strtolower($_POST['username']);
@@ -34,16 +35,17 @@
                                         if ($user == strtolower($curruser[0]) && strcasecmp($_POST['pw'],$curruser[1]) == 0) {
                                                 $_SESSION['logged_user'] = $_POST['username'];
                                                 $isright = true;
-                                                
                                         }
                                 }
+                                if (!$isright) {
+                                	echo "<div class='login_show'><div class='center'><h6>The username/password combination you entered is incorrect.</h6>";
+                                }
+                                else {echo "<div class='login'><div class='center'>"; }
                         }
                 }
+                else { echo "<div class='login'><div class='center'>"; }
         ?>
-        
-        <div class='login'>
-                <div class="center">
-                        <form id='login' action='index.php' method='post'>
+                        <form name='login' action='index.php' method='post'>
                         <p>
                         	username
                         </p>
@@ -53,7 +55,7 @@
                         </p>
                         <input type="password" name="pw" class="text"/>
                         <br>
-                        <input type='submit' value='Log In' action='usercheck();'>
+                        <input type='submit' value='Log In' onclick='return usercheck();'>
                         </form>
                         <br>
                 </div>
