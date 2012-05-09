@@ -58,11 +58,79 @@
 			<h2>
 				Admin Dashboard
 			</h2>
-		<!-- Add Blogpost
-			If POST[blogcontent], POST[title] is set
-				Get currdate
-				Insert into blogposts values(id, POST[title], POST[blogcontent], currdate, currdate) 
-				Insert into notifications values(currdate, actionid, blog) -->
+			
+			<?php
+				if (isset($_POST['newuser']) && isset($_POST['newpw'])) {
+             		$newuser = $_POST['newuser'];
+               		$newpw = md5($_POST['newpw']);
+               		$users = mysql_query('SELECT username FROM users');
+               		$numusers = mysql_num_rows($users);
+               		$alreadyexists = false;
+               		for ($j = 0; $j < $numusers - 1; $j++) {
+						$user = mysql_result($users, $j);
+						if (strcasecmp($newuser, $user) === 0) {
+							$alreadyexists = true;
+						}
+					}
+					if ($alreadyexists) {
+						echo "<h5><font color = 'red'>ERROR: The username \"".$newuser."\" already exists. Please enter a different name.</font></h5>";
+					}
+	               	else if ($_POST['isadmin'] == isadmin) {
+	                   	mysql_query('INSERT INTO users VALUES(\''.$newuser.'\', \''.$newpw.'\', 1)');
+	                    echo "<h5>Successfully added administrator \"".$newuser."\" to the site.</h5>";
+	              	}
+	                else {
+	                    mysql_query('INSERT INTO users VALUES(\''.$newuser.'\', \''.$newpw.'\', 0)');
+	                    echo "<h5>Successfully added user \"".$newuser."\" to the site.</h5>";
+	                }
+	            }
+	     	?>
+	     	
+		  	<?php
+		  		if ($_POST['remsub'] == 1) {
+		        	$rem = $_POST['rem'];
+		        	if (empty($rem)) {
+		        		echo "<h5><font color = 'red'>Please select users to delete.</font></h5>";
+		        	}
+		        	else {
+		        		$numrem = count($rem);
+		        		for ($i = 0; $i < $numrem; $i++) {
+		        			mysql_query("DELETE FROM users WHERE username='".$rem[$i]."'");
+		        		}
+		        		echo "<h5>Successfully deleted users.</h5>";
+		        	}
+		        }
+	        ?>
+     	
+		</div>
+		
+		<table width="100%">
+		<tr>
+		
+		<td class = "dashboard">
+		<div class='module'>
+			<a href="#" onclick="$('#addsister').slideToggle();">
+				<h3>
+					Add Sister
+				</h3>
+			</a>
+			<div id ='addsister'>
+				text here
+			</div>
+		</div>
+		
+		<td class = "dashboard">
+		<div class='module'>
+			<a href="#" onclick="$('#pollresults').slideToggle();">		
+				<h3>
+					Poll Results
+				</h3>
+			</a>
+			<div id = 'pollresults'>
+				text here
+			</div>
+		</div>
+
 		<!-- Edit Blogpost
 			Connect to final proj database
 			Select title from blogposts
@@ -72,95 +140,133 @@
 			Select currdate from blogposts where blogchange=title
 			Get currdate
 			Update users set title=new title, content=new content, oldcurrdate, currdate) -->
-				
-		<!-- Add Event
-			If POST[name], POST[date] is set
-				Insert into blogposts values(id, POST[name], POST[date])
-				Get currdate
-				Insert into notifications values(currdate, actionid, event) -->
-	
-		<div id="newuser">
+		
+		</tr>
+		<tr>
+		<td class = "dashboard">
+		<div class='module'>
+			<a href="#" onclick="$('#addevent').slideToggle();">
+				<h3>
+					Add Event
+				</h3>
+			</a>
+			<div id = 'addevent'>
+				text here
+			<!-- Add Event
+				If POST[name], POST[date] is set
+					Insert into blogposts values(id, POST[name], POST[date])
+					Get currdate
+					Insert into notifications values(currdate, actionid, event) -->
+			</div>
+		</div>
+		
+		<td class = "dashboard">
+		<div class='module'>
+			<a href="#" onclick="$('#addphoto').slideToggle();">
+				<h3>
+					Add Photo
+				</h3>
+			</a>
+			<div id = 'addphoto'>
+				text here
+			</div>
+		</div>
+		
+		</tr>
+		<tr>
+		<td class="dashboard">
+		<div class ="module">
+		<a href="#" onclick="$('#adduser').slideToggle();">
 			<h3>
 				Add User
 			</h3>
+		</a>
+		<div id = "adduser">
 			<h5>
+				<form name='adduser' action='admin.php' method='post'>
 				<table>
-					<form name='adduser' action='admin.php' method='post'>
-					<tr>
-						<td>Username: 
-						<td><input type='text' name='newuser'/>
-					</tr>
-					<tr>
-						<td>Password: 
-						<td><input type='password' name='newpw'/>
-					</tr>
-					<tr>
-						<td align='right'><input type='checkbox' name='isadmin' value='isadmin'/> 
-						<td>Administrator <br>
-					</tr>
-					<tr>
-						<td>
-						<td align='right'><input type='submit' name='submit' value='Create' onclick='adduser();'>
-					</tr>
-					</form>
+				<tr>
+					<td>Username: 
+					<td><input type='text' name='newuser'/>
+				</tr>
+				<tr>
+					<td>Password: 
+					<td><input type='text' name='newpw'/>
+				</tr>
 				</table>
-			</h5>
-			<?php
-				if (isset($_POST['newuser']) && isset($_POST['newpw'])) {
-					$con = mysql_connect("localhost","root","kkk524425kk");
-					
-					if (!$con) {
-                        die('Could not connect: '. mysql_error());
-                   	}
-                   	
-               		mysql_select_db("test_Final_Project", $con);
-               		$newuser = $_POST['newuser'];
-               		$newpw = $_POST['newpw'];
-               		$users = mysql_query('SELECT username FROM users');
+				&nbsp;&nbsp;<input type='checkbox' name='isadmin' value='isadmin'/> Administrator <br>
+				<div id ='right'><input type='submit' value='Create' onclick='return addcheck();'></div>
+				</form>
+     		</h5>
+     	</div>
+     	
+     	
+     	<td class="dashboard">
+     	<div class ="module">
+			<a href="#" onclick="$('#listusers').slideToggle();">
+				<h3>
+					Edit Users
+				</h3>
+			</a>        
+       	<div id = "listusers">
+       		<h5>
+        	<form name='removeuser' action='admin.php' method='post'>
+         		<?php
+         			$usersarr = array();
+       				$adminarr = array();
+               		$users = mysql_query('SELECT* FROM users');
                		$numusers = mysql_num_rows($users);
-               		$alreadyexists = false;
-               		for ($j = 0; $j < $numusers - 1; $j++) {
-						$user = mysql_result($users, $j);
-						if (strcasecmp($newuser, $user)) {
-							$alreadyexists = true;
+               		for ($j = 0; $j < $numusers; $j++) {
+						$user = mysql_fetch_row($users);
+						if ($user[2] == 0) {
+							array_push($usersarr,$user[0]);
+						}
+						else {
+							array_push($adminarr,$user[0]);
 						}
 					}
-					if ($alreadyexists) {
-						echo "<h5>The username \"".$newuser."\" already exists. Please enter a different name.</h5><br>";
+					echo "<table width='100%'><tr><td class='dashboard'><b>Users</b><br>";
+					for ($i = 0; $i < count($usersarr); $i++) {
+						echo "<input type='checkbox' name='rem[]' value='$usersarr[$i]' />&nbsp;$usersarr[$i]<br>";
 					}
-               		else if ($_POST['isadmin'] == isadmin) {
-                    	mysql_query('INSERT INTO users VALUES(\''.$newuser.'\', \''.$newpw.'\', 1)');
-                    	echo "<h5>Added administrator ".$newuser." to the site.</h5>";
-                    }
-                    else {
-                    	mysql_query('INSERT INTO users VALUES(\''.$newuser.'\', \''.$newpw.'\', 0)');
-                        echo "<h5>Added user ".$newuser." to the site.</h5>";
-                    }
-             	}
-            ?>
-            
-            <button onclick="users()">Users</button>
-            <div id = 'allusers'>
-            	<form name='removeuser' action='admin.php' method='post'>
-            	<?php
-            		$con = mysql_connect("localhost","root","kkk524425kk");
-					
-					if (!$con) {
-                        die('Could not connect: '. mysql_error());
-                   	}
-                   	
-               		mysql_select_db("test_Final_Project", $con);
-               		$users = mysql_query('SELECT username FROM users');
-               		$numusers = mysql_num_rows($users);
-               		for ($j = 0; $j < $numusers - 1; $j++) {
-						$user = mysql_result($users, $j);
-						echo "<input type='checkbox' name='rem[]' value='$user' />$user<br>";
+					echo "<td class='dashboard'><b>Administrators</b><br>";
+					for ($i = 0; $i < count($adminarr); $i++) {
+						echo "<input type='checkbox' name='rem[]' value='$adminarr[$i]' />&nbsp;$adminarr[$i]<br>";
 					}
+					echo "</tr></table>";
 				?>
-				</form>
+				<br>
+				<input type='hidden' name='remsub' value='1'>
+				<input type='submit' value='Remove' onclick='return removecheck();'>
+			</form>
+			</h5>
+		</div>
+		</div>
+		</tr></table>
+		
+		<div class='module'>
+			<a href="#" onclick="$('#addblog').slideToggle();">		
+				<h3>
+					Add Blog
+				</h3>
+			</a>
+			<div id = 'addblog'>
+				<form name='blog' action='blog.php' method='post'>
+					<h5>
+						Title: <input type='text' name='blogtitle' maxlength='50' size='50'><br><br>
+						<input type='hidden' name='author' value='<?php echo $_SESSION['logged_user']; ?>'>
+						<div id ='center'><textarea name='content' rows='20' cols='107'></textarea></div><br>
+						<div id ='right'><input type='submit' value='Post Blog' onclick='return blogcheck();'></div>
+					</h5>
+				</form> 
+			<!-- Add Blogpost
+				If POST[blogcontent], POST[title] is set
+				Get currdate
+				Insert into blogposts values(id, POST[title], POST[blogcontent], currdate, currdate) 
+				Insert into notifications values(currdate, actionid, blog) -->
 			</div>
 		</div>
 	</div>
-
+	<br>
 </body>
 </html>

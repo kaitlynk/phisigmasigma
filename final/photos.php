@@ -69,7 +69,7 @@
 							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
 						}
 						else {
-							echo $un."!";
+							echo "<div class='user'>".$un."!</div>";
 						}
 						echo "<br>
                     	<div class='user'><a class='logout' href='logout.php'>Logout</a></div></div>";

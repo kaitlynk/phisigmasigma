@@ -1,16 +1,14 @@
-function users() {
-	var change = document.getElementById('allusers');
-	if (change.style.display == 'none') {
-		change.style.display='block';
+function toggleview(elementid) {
+	var change = document.getElementById(elementid);
+	if (change.style.display == "block") {
+		change.style.display="none";
 	}
-	else {change.style.display='none';}
+	else {change.style.display='block';}
 }
 
-function adduser() {
-	alert('hi');
-	alert(document.adduser.newuser.value);
+function addcheck() {
 	if (document.adduser.newuser.value == "" || document.adduser.newpw.value == "") {
-		alert('Please enter both the username and password.');
+		alert('Please enter both a username and password.');
 		return false;
 	}
 }
@@ -20,4 +18,22 @@ function usercheck() {
 		alert('Please enter both a username and password.');
 		return false;
 	}
+}
+
+function changecheck() {
+	if (document.login.username.value == "" && document.login.pw.value == "") {
+		alert('You must change something. Please fill out at least one field.');
+		return false;
+	}
+}
+
+function blogcheck() {
+	if (document.blog.title.value == "" || document.blog.content.value == "") {
+		alert('Please fill out all fields.');
+		return false;
+	}
+}
+
+function changevalue(newval) {
+	alert(document.blog.action.value);
 }

@@ -29,10 +29,11 @@
                                 mysql_select_db("test_Final_Project", $con);
                                 
                                 $users = mysql_query('SELECT* FROM users');
-                                $numusers = mysql_num_rows($users);             
+                                $numusers = mysql_num_rows($users);        
+                                $pw = md5($_POST['pw']);     
                                 for ($i = 0; $i < $numusers; $i++) {
                                         $curruser = mysql_fetch_row($users);
-                                        if ($user == strtolower($curruser[0]) && strcasecmp($_POST['pw'],$curruser[1]) == 0) {
+                                        if ($user == strtolower($curruser[0]) && strcasecmp($pw,$curruser[1]) == 0) {
                                                 $_SESSION['logged_user'] = $_POST['username'];
                                                 $isright = true;
                                         }
@@ -97,10 +98,10 @@
                			$un = $_SESSION['logged_user'];
                			$admin = mysql_query("SELECT isAdmin FROM users WHERE username='".$un."'");
                			if (mysql_result($admin, 0) == 1) {
-							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
+							echo "<a href = 'admin.php'><div class='user'><u>".$un."</u>!</div></a>";
 						}
 						else {
-							echo $un."!";
+							echo "<div class='user'>".$un."!</div>";
 						}
 						echo "<br>
                     	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";

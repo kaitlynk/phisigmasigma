@@ -38,28 +38,27 @@
                             ?>
                             <a href='photos.php'><li>PHOTOS</li></a>
                            	<a href="contact.php"><li>CONTACT</li></a>
-                                        </ul>
-                                </strong>
-                            				<?php
-					if (isset($_SESSION['logged_user'])) {
-                    	echo "<div class='user'>
-                    	Welcome, ";
-                    	
-                    	$con = mysql_connect("localhost","root","kkk524425kk");
+                 	</ul>
+         		</strong>
+            	<?php
+            		$con = mysql_connect("localhost","root","kkk524425kk");
                     	
 						if (!$con) {
                        		die('Could not connect: '. mysql_error());
                    		}
                    		
                    		mysql_select_db("test_Final_Project", $con);
-                   		
+					if (isset($_SESSION['logged_user'])) {
+                    	echo "<div class='user'>
+                    	Welcome, ";
+                    	                   		
                			$un = $_SESSION['logged_user'];
                			$admin = mysql_query("SELECT isAdmin FROM users WHERE username='".$un."'");
                			if (mysql_result($admin, 0) == 1) {
 							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
 						}
 						else {
-							echo $un."!";
+							echo "<div class='user'>".$un."!</div>";
 						}
 						echo "<br>
                     	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";
@@ -77,6 +76,64 @@
 			<h1 id="ribbon_bottom" class="ribbon">
    				<strong class="ribbon-content">Phi Sigma Sigma</strong>
 			</h1>
+			
+			<!-- Adds blog posts -->
+			<?php
+				if (isset($_POST['blogtitle']) && isset($_POST['content'])) {
+					$title=$_POST['blogtitle'];
+					$content=$_POST['content'];
+					date_default_timezone_set("America/New_York");
+					$date = date('Y-m-d H:i:s');
+					$author=$_POST['author'];
+					if (isset($_POST['editedid'])) {
+						$editedid = $_POST['editedid'];
+						if ($_POST['action'] == 'edit') {
+							mysql_query("UPDATE blogposts SET title='".$title."', content='".$content."', datemodified='".$date."' 
+							WHERE id='".$editedid."'");
+						}
+						else if ($_POST['action'] == 'delete') {
+							mysql_query("DELETE FROM blogposts WHERE id='".$editedid."'");
+						}
+					}
+					else {
+						mysql_query("INSERT INTO blogposts (title, author, content, datecreated, datemodified) 
+						VALUES ('".$title."', '".$author."', '".$content."', '".$date."', '".$date."')");
+					}
+				}
+			?>
+			
+			<!-- Lists blogs -->
+			<?php
+				$numblogsquery = mysql_query("SELECT MAX(id) FROM blogposts");
+				$numblogs = mysql_fetch_row($numblogsquery);
+				for ($i = $numblogs[0]; $i > 1; $i--) {
+					$blogquery = mysql_query("SELECT* FROM blogposts WHERE id='".$i."'");
+					$blog = mysql_fetch_row($blogquery);
+					if (!blogquery || $blog[1] == "") {
+					}
+					else {
+						$datecq = date_create($blog[4]);
+						$datemq = date_create($blog[5]);
+						$datec = date_format($datecq, 'l, F j, Y \a\t g:ia');
+						$datem = date_format($datemq, 'l, F j, Y \a\t g:ia');
+						
+						echo "<div class='module'>
+								<h3> $blog[1] <div id = 'author'> by $blog[2] </div>";
+						if (mysql_result($admin, 0) == 1) {
+						echo "<form name='editblog' action='editblog.php' method='post'>
+						<input type='submit' value='Edit' class = 'edit'>
+						<input type='hidden' name='editid' value='$blog[0]'>
+						</form>";
+						}
+						echo "</h3>
+								<h4>".$datec."</h4>
+								<p>".$blog[3]."</p>
+							</div>";
+					}
+				}
+			?>
+									
+				
 			<div class="module">
 				<h3>
 					This is a blog post title.
