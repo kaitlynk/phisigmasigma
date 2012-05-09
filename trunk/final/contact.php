@@ -68,7 +68,7 @@
 							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
 						}
 						else {
-							echo $un."!";
+							echo "<div class='user'>".$un."!</div>";
 						}
 						echo "<br>
                     	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";
@@ -100,16 +100,17 @@
 			Email us at:
 		</h4>
 		<p>
-			Mary Lopez, mel239@cornell.edu
-			Renee Britton, rmb282@cornell.edu
+			Mary Lopez, <a href="mailto:mel239@cornell.edu">mel239@cornell.edu</a> <br>
+			Renee Britton, <a href="mailto:rmb282@cornell.edu">rmb282@cornell.edu</a> <br>
 		</p>
 		<h4>
 			Send us a letter at:
 		</h4>
 		<p>
-			Phi Sigma Sigma
-			14 South Avenue
-			Ithaca, NY 14850
+			Phi Sigma Sigma <br>
+			14 South Avenue <br>
+			Ithaca, NY 14850 <br><br>
+			<iframe width="325" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=14+South+Avenue,+Ithaca,+NY&amp;aq=0&amp;oq=14+South+Avenue,+ithaca&amp;sll=42.449575,-76.489952&amp;sspn=0.016276,0.038581&amp;ie=UTF8&amp;hq=&amp;hnear=14+South+Ave,+Ithaca,+New+York+14850&amp;t=m&amp;z=14&amp;ll=42.445036,-76.487844&amp;output=embed"></iframe><br /><small><a href="http://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=14+South+Avenue,+Ithaca,+NY&amp;aq=0&amp;oq=14+South+Avenue,+ithaca&amp;sll=42.449575,-76.489952&amp;sspn=0.016276,0.038581&amp;ie=UTF8&amp;hq=&amp;hnear=14+South+Ave,+Ithaca,+New+York+14850&amp;t=m&amp;z=14&amp;ll=42.445036,-76.487844" style="color:#0000FF;text-align:left">View Larger Map</a></small>
 		</p>
 		<div class="clear"></div>
 	</div>

@@ -27,6 +27,7 @@ h3 {
 	font-family: "omnes-pro", arial, sans-serif;
 	margin: 0;
 	color: #999;
+	text-decoration: none;
 }
 h4 {
 	color: #F3327F;
@@ -35,13 +36,21 @@ h4 {
 }
 h5 {
 	font-weight: normal;
+	font-family: verdana, sans-serif;
 }
 h6 {
 	color: white;
 	line-height: 5%;
 }
+a {
+	text-decoration: none;
+}
 p {
 	font-size: 14px;
+}
+.dashboard {
+	vertical-align: text-top;
+	width: 50%;
 }
 .ribbon {
 	background-color: #F3327F;
@@ -236,6 +245,33 @@ li {
  right: 0;
  border-width: 1em 1em 0 0;
 }
-.allusers {
+#listusers, #adduser, #addevent, #addblog, #addphoto, #addsister, #pollresults {
  display: none;
 }
+#center {
+	text-align: center;
+}
+#right {
+	text-align: right;
+}
+#author {
+	font-size: 13px;
+	text-decoration: none;
+	color: black;
+	display: inline;
+	font-weight: normal;
+	margin-left: 3px;
+	font-family: trebuchet ms;
+}
+.edit {	
+	float:right;
+	margin-right: 5px;
+	font-size: 13px;
+	text-decoration: none;
+	display: inline;
+	font-family: arial;
+}
+
+
+
+

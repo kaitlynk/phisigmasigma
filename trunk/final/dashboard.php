@@ -12,9 +12,44 @@
 </head>
 <body>
         <?php
-                if (!isset($_SESSION['logged_user'])) {
-                        $_SESSION['logged_user'] = $_POST['username'];
-                }
+        
+        	if (!isset($_SESSION['logged_user'])) {
+  				$_SESSION['logged_user'] = $_POST['username'];
+       		}
+       		
+        	$con = mysql_connect("localhost","root","kkk524425kk");
+                    	
+			if (!$con) {
+            	die('Could not connect: '. mysql_error());
+         	}
+                   		
+          	mysql_select_db("test_Final_Project", $con);
+        	
+        	if (isset($_POST['changeuser'])) {
+                $changeuser = $_POST['changeuser'];     
+                $oldun = $_SESSION['logged_user'];
+                
+               	$users = mysql_query('SELECT username FROM users');
+               	$numusers = mysql_num_rows($users);
+               	$alreadyexists = false;
+               	for ($j = 0; $j < $numusers; $j++) {
+					$user = mysql_result($users, $j);
+					if (strcasecmp($changeuser, $user) === 0) {
+						$alreadyexists = true;
+					}
+				}
+				if (!$alreadyexists) {
+               		mysql_query("UPDATE users SET username='".$changeuser."' WHERE username='".$oldun."'");
+               		$_SESSION['logged_user'] = $changeuser;
+               	}
+        	}
+        	
+        	if (isset($_POST['changepw'])) {
+                $oldun = $_SESSION['logged_user'];	
+                $changepw = md5($_POST['changepw']);     
+               	mysql_query("UPDATE users SET password='".$changepw."' WHERE username='".$oldun."'");
+        	}
+
         ?>
 
         <div class="center">
@@ -34,18 +69,11 @@
                            	<a href="contact.php"><li>CONTACT</li></a>
 						</ul>
 					</strong>
+					
 					<?php
 					if (isset($_SESSION['logged_user'])) {
                     	echo "<div class='user'>
                     	Welcome, ";
-                    	
-                    	$con = mysql_connect("localhost","root","kkk524425kk");
-                    	
-						if (!$con) {
-                       		die('Could not connect: '. mysql_error());
-                   		}
-                   		
-                   		mysql_select_db("test_Final_Project", $con);
                    		
                			$un = $_SESSION['logged_user'];
                			$admin = mysql_query("SELECT isAdmin FROM users WHERE username='".$un."'");
@@ -53,7 +81,7 @@
 							echo "<a href = admin.php><div class='user'><u>".$un."</u>!</div>";
 						}
 						else {
-							echo $un."!";
+							echo "<div class='user'>".$un."!</div>";
 						}
 						echo "<br>
                     	<div class='user'><a class='logout' href='logout.php'>Logout</a></div>";
@@ -63,7 +91,8 @@
                 		Login
                			</button>";
           			}
-				?>        
+				?>      
+				  
 			</div>
 		</div>
         	<h1 id="ribbon_bottom" class="ribbon">
@@ -92,19 +121,54 @@
                 </div>
            </div>
                 <div class="module">
-                        <h3>
-                                Sister of the Month
-                        </h3>
-                        <p>
-                                Submit your vote for sister of the month.
-                                <!-- Connect to FinalProj database
-                                Select name from choices
-                                Radio button next to each name
-                                If POST[choice] is set
-                                        Update choices set pollid=pollid+1 where POST[choice]=name
-                                        Select name, max(pollid) from choices
-                                        Echo result -->
-                        </p>
+                	<h3>
+               			Sister of the Month
+                	</h3>
+                    <p>
+                    	Submit your vote for sister of the month.
+                    	<!-- Connect to FinalProj database
+                    	Select name from choices
+                    	Radio button next to each name
+                    	If POST[choice] is set
+                   		Update choices set pollid=pollid+1 where POST[choice]=name
+                   		Select name, max(pollid) from choices
+                    	Echo result -->
+                    </p>
+                </div>
+                
+                <div class="module">
+                	<h3>
+                		Edit Information
+                	</h3>
+                	<h5>
+                		<table>
+                			<form name="editinfo" action="dashboard.php" method="post">
+							<tr>
+								<td>New Username: 
+								<td><input type='text' name='changeuser'/>
+							</tr>
+							<tr>
+								<td>New Password: 
+								<td><input type='text' name='changepw'/>
+							</tr>
+							<tr>
+								<td>
+								<td align='right'><input type='submit' value='Change' onclick='return changecheck();'>
+							</tr>                	
+							</form>
+						</table>
+						<?php
+							if ($alreadyexists) {
+								echo "<br><font color = 'red'>ERROR: The username \"".$changeuser."\" already exists. Please enter a different name.</font><br>";
+							}
+							else if (isset($_POST['changeuser'])) {
+								echo "<br>Your username has been successfully changed to ".$changeuser."!";
+							}
+							if (isset($_POST['changepw']) && $_POST['changepw'] != "") {
+								echo "<br>Your password has been successfully changed!";
+							}
+						?>
+                	</h5>
                 </div>
                 
                 <!-- Notifications
