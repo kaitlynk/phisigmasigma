@@ -91,8 +91,8 @@
 					<input type='hidden' name='editedid' value='<?php echo $blog[0]?>'>
 					<input type='hidden' name='action' value='edit'>
 					<div id ='center'><textarea name='content' rows='20' cols='107'><?php echo $blog[3]?></textarea></div><br>
-					<div id ='right'><input type='submit' value='Post Blog' onclick='changevalue(edit);'>
-					<input type='submit' value='Delete Blog' onclick='changevalue(delete);'></div>
+					<div id ='right'><input type='submit' value='Post Blog' onclick='return blogvalue("edit");'>
+					<input type='submit' value='Delete Blog' onclick='return blogvalue("delete");'></div>
 				</h5>
 			</form> 
 

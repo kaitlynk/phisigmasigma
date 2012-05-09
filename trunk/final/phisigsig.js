@@ -34,6 +34,6 @@ function blogcheck() {
 	}
 }
 
-function changevalue(newval) {
-	alert(document.blog.action.value);
+function blogvalue(newval) {
+	document.blog.action.value=newval;
 }
