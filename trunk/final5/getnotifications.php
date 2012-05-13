@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 include_once('db.inc');
 $mysql = new mysqli($host, $username, $password, $database);

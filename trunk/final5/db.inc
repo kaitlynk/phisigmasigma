@@ -1,6 +1,6 @@
 <?
 $username = 'root';
-$password = '4000Hibl';
-$database = 'final_project';
+$password = 'kkk524425kk';
+$database = 'test_Final_Project';
 $host = 'localhost';
 ?>
