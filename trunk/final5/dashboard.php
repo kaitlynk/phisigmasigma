@@ -56,17 +56,31 @@ if (isset($_POST['rsvp'])) {
 			$rsvpevent = mysql_fetch_row($rsvpeventq);
 			$rsvpnameq = mysql_query("SELECT firstname, lastname FROM users WHERE username='".$un."'");
 			$rsvpname = mysql_fetch_row($rsvpnameq);
-			if ($rsvpevent[0] == "") {
-				$rsvpevent[0] = $rsvpname[0]." ".$rsvpname[1];
+			$rsvper = $rsvpname[0]." ".$rsvpname[1];
+			
+			$rsvparray = explode(", ", $rsvpevent[0]);
+			$alreadyrsvp = false;
+			
+			for ($j = 0; $j < count($rsvparray); $j++) {
+				if (strcasecmp($rsvper, $rsvparray[$j]) === 0) {
+					$message = "<p>You have already RSVP'd to this event. Please try again.</p>";
+					$alreadyrsvp = true;
+				}
 			}
-			else {
-				$rsvpevent[0] = $rsvpevent[0].", ".$rsvpname[0]." ".$rsvpname[1];
-			}
-			$rsvpsucc = mysql_query("UPDATE events SET Attendees='".$rsvpevent[0]."' WHERE id='".$rsvplist[$i]."'");
-			$message = "<p>Successfully RSVP'd.</p>";
-			if (!$rsvpsucc) {
-    			die('Invalid query: ' . mysql_error());
-				$message = "<p>You could not RSVP to the events. Please try again.</p>";
+			
+			if (!$alreadyrsvp) {
+				if ($rsvpevent[0] == "") {
+					$rsvpevent[0] = $rsvpname[0]." ".$rsvpname[1];
+				}
+				else {
+					$rsvpevent[0] = $rsvpevent[0].", ".$rsvpname[0]." ".$rsvpname[1];
+				}
+				$rsvpsucc = mysql_query("UPDATE events SET Attendees='".$rsvpevent[0]."' WHERE id='".$rsvplist[$i]."'");
+				$message = "<p>Successfully RSVP'd.</p>";
+				if (!$rsvpsucc) {
+	    			die('Invalid query: ' . mysql_error());
+					$message = "<p>You could not RSVP to the events. Please try again.</p>";
+				}
 			}
 		}
 	}
@@ -90,25 +104,29 @@ if (isset($_POST['unrsvp'])) {
 			
 			$rsvparray = explode(", ", $rsvpevent[0]);
 			$isrsvp = false;
-			
-			for ($i = 0; $i < count($rsvparray); $i++) {
-			echo $rsvparray[$i];
-				if (strcasecmp($rsvper, $rsvparray[$i]) === 0) {
-					echo strcasecmp($rsvper, $rsvparray[$i]);
-					$rsvparray = array_splice($rsvparray, $i);
+			$numarray = count($rsvparray);
+						
+			for ($j = 0; $j < $numarray; $j++) {
+				if (strcasecmp($rsvper, $rsvparray[$j]) === 0) {
+					if (count($rsvparray) == 1 || $j == 0) {
+						array_shift($rsvparray);
+					}
+					else {
+						array_splice($rsvparray, $j, 1);
+					}
 					$isrsvp = true;
 				}
 			}
-		}
-		if ($isrsvp) {
-			$newrsvp = implode(", ", $rsvparray);
-			echo $newrsvp;
-			$rsvpsucc = mysql_query("UPDATE events SET Attendees='".$newrsvp."' WHERE id='".$rsvplist[$i]."'");
-			$message = "<p>Successfully unRSVP'd.</p>";
-		}
 			
-		else {
-			$message = "<p>You did not RSVP for this event previously. Please try again.</p>";
+			if ($isrsvp) {
+				$newrsvp = implode(", ", $rsvparray);
+				$rsvpsucc = mysql_query("UPDATE events SET Attendees='".$newrsvp."' WHERE id='".$rsvplist[$i]."'");
+				$message = "<p>Successfully unRSVP'd.</p>";
+			}
+				
+			else {
+				$message = "<p>You did not RSVP for this event previously. Please try again.</p>";
+			}
 		}
 	}
 }
@@ -147,7 +165,7 @@ function process(data) {
 	<div class="header">
 		<div class="center">
 			<h4>
-				ΦΣΣ
+				Œ¶Œ£Œ£
 			</h4>
 						<?php
 			if(!isset($_SESSION['logged_user'])) {
