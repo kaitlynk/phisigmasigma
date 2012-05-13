@@ -1,4 +1,4 @@
-<? 
+<?php
 session_start();
 include_once('db.inc');
 ?>
@@ -14,6 +14,7 @@ include_once('db.inc');
 <script type="text/javascript" src="jquery-ui-1.8.18.custom.min.js"></script>
 <script type="text/javascript" src="jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="jquery.smoothDivScroll-1.2.js"></script>
+<script type="text/javascript" src="phisigsig.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#makeMeScrollable").smoothDivScroll({ 
@@ -38,7 +39,7 @@ include_once('db.inc');
 </script>
 </head>
 <body>
-	<?
+	<?php
 	 $isright = false;
                 if (!isset($_SESSION['logged_user'])) {
                         if(isset($_POST['login'])) {
@@ -48,14 +49,13 @@ include_once('db.inc');
                                     die('Could not connect: ' . mysql_error());
                                 }
                                 
-                                mysql_select_db($database, $con);
-                                
+                                mysql_select_db("test_Final_Project", $con);
                                 $users = mysql_query('SELECT* FROM users');
                                 $numusers = mysql_num_rows($users);        
-                                $pw = md5($_POST['pw']);     
+                                $pw = md5($_POST['pw']);
                                 for ($i = 0; $i < $numusers; $i++) {
                                         $curruser = mysql_fetch_row($users);
-                                        if ($user == strtolower($curruser[1]) && strcasecmp($pw,$curruser[4]) == 0) {
+                                        if (strcasecmp($user, $curruser[1]) === 0 && strcasecmp($pw,$curruser[4]) === 0) {
                                                 $_SESSION['logged_user'] = $_POST['username'];
                                                 $isright = true;
                                         }
@@ -64,14 +64,14 @@ include_once('db.inc');
                                 	$errortext = '<div class="error"><p>The username/password combination you entered is incorrect.</p></div>';
                                 }
                         }
-                }
+                }                
     ?>
 	<div class="header">
 		<div class="center">
 			<h4>
 				ΦΣΣ
 			</h4>
-			<?
+			<?php
 			if(!isset($_SESSION['logged_user'])) {
 				echo '<button class="login_button" onclick="$(\'#login\').slideToggle(100);">
 					Login
@@ -91,7 +91,7 @@ include_once('db.inc');
 	<div class="center">
 		<div class="blog"></div>
 		<div class="nav">
-		<?
+		<?php
 		if(!isset($_SESSION['logged_user'])) {
 			echo '<div id="login">
 				<form name="login" action="index.php" method="post">
@@ -106,22 +106,21 @@ include_once('db.inc');
 			Phi Sigma Sigma.
 		</h1>
 			<ul>
-				<li>
+				<a href = 'index.php'><li>
 					Home
-				</li>
-				<li>
+				</li></a>
+				<a href = 'history.php'><li>
 					History
-				</li>
-				<li>
+				</li></a>
+				<a href = 'contact.php'><li>
 					Contact
-				</li>
-				<li>
+				</li></a>
+				<a href = 'blog.php'><li>
 					<button>Blog</button>
-				</li>
+				</li></a>
 			</ul>
 
 		</div>
-	</div>
 	<div id="makeMeScrollable">
 		<img src="images/contact.jpg" alt="Demo image" id="field" />
 		<img src="images/home1.png" alt="Demo image" id="field" />

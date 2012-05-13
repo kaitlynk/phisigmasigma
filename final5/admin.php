@@ -1,4 +1,5 @@
-<?
+<?php
+session_start();
 include_once('db.inc');
 $con = mysql_connect($host,$username,$password);
 
@@ -6,7 +7,7 @@ if (!$con) {
     die('Could not connect: '. mysql_error());
 	}
 	
-	mysql_select_db($database, $con);
+mysql_select_db(test_Final_Project, $con);
 if(isset($_POST['addphoto']) && isset($_FILES['photo'])) {
 	echo'hi';
 	if($_FILES['photo']['error'] > 0) {
@@ -68,7 +69,11 @@ if (empty($rem)) {
 else {
 	$numrem = count($rem);
 	for ($i = 0; $i < $numrem; $i++) {
-		mysql_query("DELETE FROM users WHERE username='".$rem[$i]."'");
+		$remun = explode(" ",$rem[$i]);
+		$delsucc = mysql_query("DELETE FROM users WHERE username='".$remun[0]."'");
+		if (!$delsucc) {
+			$message = "<p>Users could not be deleted. Please try again.</p>";
+		}
 	}
 	$message = "<p>Successfully deleted users.</p>";
 }
@@ -88,6 +93,72 @@ if(isset($_POST['resetvotes'])) {
 	$mysql->query("DELETE FROM votes");
 	$message = "<p>The votes have been reset.</p>";
 }
+
+if (isset($_POST['createevent']) || isset($_POST['edited'])) {
+	$ename = $_POST['eventname'];
+	$eloc = $_POST['eventloc'];
+	$etime = $_POST['eventtime'];
+	date_default_timezone_set("America/New_York");
+	$month = $_POST['month'];
+	$date = $_POST['date'];
+	$year = $_POST['year'];
+	$hour = $_POST['hour'];
+	$mins = $_POST['mins'];
+	
+	if ($hour > 12 || $hour < 1 || $mins > 59 || $mins < 0) {
+		$message = "<p>Please enter a valid time and try again.</p>";
+	}
+	else {
+		$datetime = new DateTime();
+		$datetime = date_date_set($datetime, $year, $month, $date);
+		$ampm = $_POST['ampm'];
+		if ($ampm == "PM") {
+			$hour = $hour + 12;
+		}
+		
+		$datetime = date_time_set($datetime, $hour, $mins);
+		$datetime = date_format($datetime,'Y-m-d H:i:s');
+	
+		if (isset($_POST['public'])) {
+			$epub = 1;
+		}	
+		else {$epub = 0;}
+		
+		if (isset($_POST['createevent'])) {
+			$equery = mysql_query("INSERT INTO events(name, location, datetime, public) VALUES('".$ename."', '".$eloc."', '".$datetime."', '".$epub."')");
+			$message = "<p>Successfully added event!</p>";
+			if (!$equery) {
+				$message = "<p>Event could not be added. Please try again.</p>";
+			}
+		}
+		else {
+			$id = $_POST['editedid'];
+			$equery = mysql_query("UPDATE events SET name='".$ename."', location='".$eloc."', datetime='".$datetime."', public='".$epub."' WHERE id='".$id."'");
+			$message = "<p>Successfully updated event!</p>";
+			if (!$equery) {
+				$message = "<p>Event could not be edited. Please try again.</p>";
+			}
+		}
+	}
+}
+
+if (isset($_POST['remeve'])) {
+	$eves = $_POST['remev'];
+	if (empty($eves)) {
+		$message = "<p>Please select events to delete.</p>";
+	}
+	else {
+		$numeves = count($eves);
+		for ($i = 0; $i < $numeves; $i++) {
+			$evedelsucc = mysql_query("DELETE FROM events WHERE id='".$eves[$i]."'");
+			if (!$evedelsucc) {
+				$message = "<p>Events could not be deleted. Please try again.</p>";
+			}
+		}
+		$message = "<p>Successfully deleted events.</p>";
+	}
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -101,9 +172,10 @@ if(isset($_POST['resetvotes'])) {
 <script type="text/javascript" src="jquery-ui-1.8.18.custom.min.js"></script>
 <script type="text/javascript" src="jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="jquery.smoothDivScroll-1.2.js"></script>
+<script type="text/javascript" src="phisigsig.js"></script>
 </head>
 <body>
-	Welcome, <?php 
+	<!-- Welcome, <?php 
                		$un = $_SESSION['logged_user'];
                		$admin = mysql_query("SELECT isAdmin FROM users WHERE username='".$un."'");
                		$adminresult = mysql_fetch_row($admin);
@@ -114,25 +186,42 @@ if(isset($_POST['resetvotes'])) {
 						echo "notadmin".$un."!";
 					}
 
-					?>
+					?> -->
 	<div class="header">
 		<div class="center">
 			<h4>
 				ΦΣΣ
 			</h4>
-			<button class='login_button' onclick="$('#login').fadeToggle();">
-				Login
-			</button>
-			<div id="login">
-				<input class="textbox"/>
-				<input class="textbox"/>
-			</div>
+			<?php
+			if(!isset($_SESSION['logged_user'])) {
+				echo '<button class="login_button" onclick="$(\'#login\').slideToggle(100);">
+					Login
+					</button>';
+			}
+			else {
+				echo '<a href="logout.php" class="login_button">
+					Logout
+					</a>';
+			}
+			if(isset($errortext))
+				echo $errortext;
+			?>
 		</div>
 	</div>
 	<div class="buffer"></div>
 	<div class="center">
-		<div class="blog"></div>
 		<div class="nav">
+		<?php
+		if(!isset($_SESSION['logged_user'])) {
+			echo '<div id="login">
+				<form name="login" action="index.php" method="post">
+                <input name="username" type="text" class="text"/>
+                <input type="password" name="pw" class="text"/>
+                <input type="submit" name="login" class="login_button"/>
+           		</form>
+				</div>';
+		}
+		?>
 		<h1>
 			Phi Sigma Sigma.
 		</h1>
@@ -156,7 +245,7 @@ if(isset($_POST['resetvotes'])) {
 	<div class="pink"></div>
 	<div class="blue"></div>
 	<div class="middle">
-		<?
+		<?php
 		if(isset($message))
 			echo $message;
 		?>
@@ -187,16 +276,14 @@ if(isset($_POST['resetvotes'])) {
 						<p>
 							<input type='checkbox' name='isadmin' value='isadmin'/> Administrator
 						</p>
-						<div id ='right'>
-							<p>
-								<input type='submit' value='Create' class="button" onclick='return addcheck();'>
-							</p>
-						</div>
-						</form>
-					</div>
+						<p>
+							<input type='submit' value='Create' class="button" onclick='return addcheck();'>
+						</p>
+					</form>
 				</div>
 			</div>
-			<div class="module_wrapper_small">
+		</div>
+		<div class="module_wrapper_small">
 			<div class="module">
 				<h3 onclick="$(this).next('.hidden').slideToggle(200)">
 					Add photos
@@ -225,7 +312,7 @@ if(isset($_POST['resetvotes'])) {
 						<h4>
 							Album
 						</h4>
-						<select name="albumid">
+						<select name="albumid" class="albsel">
 							<?
 							$mysql = new mysqli($host, $username, $password, $database);
 							$albums = $mysql->query("SELECT id, name FROM albums");
@@ -253,6 +340,62 @@ if(isset($_POST['resetvotes'])) {
 				</div>
 			</div>
 		</div>
+		<div class="module_wrapper_small">
+			<div class="module">
+		        <h3 onclick="$(this).next('.hidden').slideToggle(200)">
+					Add an Event
+				</h3>
+				<div class="hidden">
+			        <form name='addevent' action='admin.php' method='post'>
+						<h4>Event Name</h4>
+						<p>
+							<input type='text' name='eventname' class="text"/>
+						</p>
+						<h4>Location</h4>
+						<p>
+							<input type='text' name='eventloc' class="text"/>
+						</p>
+						<h4>Date</h4>
+						<form name = 'dateofe' method = 'POST' action = 'mainck.php'>
+								<select name = 'month' onchange = 'return ajaxfunc(this.value);'>
+									<option value = '01'>January</option>
+									<option value = '02'>February</option>
+									<option value = '03'>March</option>
+									<option value = '04'>April</option>
+									<option value = '05'>May</option>
+									<option value = '06'>June</option>
+									<option value = '07'>July</option>
+									<option value = '08'>August</option>
+									<option value = '09'>September</option>
+									<option value = '10'>October</option>
+									<option value = '11'>November</option>
+									<option value = '12'>December</option>
+								</select>
+								<select name = 'date' id = 'date'>
+									<?php
+									for ($i = 1; $i < 31; $i++) {
+									echo "<option value = '".$i."'>".$i."</option>";
+									}
+									?>
+								</select>
+								<input type = 'text' name = 'year' maxlength = '4' size = '4' class='yeartext' value = '2012'>
+							
+						<h4>Time</h4>
+						<input type = 'text' name = 'hour' maxlength = '2' size = '2' class='timetxt' id = 'hour'>:&nbsp;&nbsp;&nbsp;&nbsp;<input type = 'text' name = 'mins' maxlength = '2' size = '2' class='timetxt' id = 'mins'>
+						<select name = 'ampm'>
+							<option value = 'AM'>AM</option>
+							<option value = 'PM'>PM</option>
+						</select>
+						<p>
+							<input type='checkbox' name='public' value='public'/> Public Event
+						</p>
+						<p>
+							<input type='submit' name='createevent' value='Create' class="button" onclick='return eventcheck();'>
+						</p>
+					</form></form>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="column">
 		<div class="module_wrapper_small">
@@ -269,22 +412,26 @@ if(isset($_POST['resetvotes'])) {
 	               		$numusers = mysql_num_rows($users);
 	               		for ($j = 0; $j < $numusers; $j++) {
 							$user = mysql_fetch_row($users);
+							$fullname = $user[1]." (".$user[2]." ".$user[3].")";
 							if ($user[5] == 0) {
-								array_push($usersarr,$user[1]);
+								array_push($usersarr,$fullname);
 							}
 							else {
-								array_push($adminarr,$user[1]);
+								array_push($adminarr,$fullname);
 							}
 						}
 						echo "<h4>Users</h4>";
 						for ($i = 0; $i < count($usersarr); $i++) {
 							echo "<p><input type='checkbox' name='rem[]' value='$usersarr[$i]' />$usersarr[$i]</p>";
 						}
+						
 						echo "<h4>Administrators</h4>";
+						
 						for ($i = 0; $i < count($adminarr); $i++) {
 							echo "<input type='checkbox' name='rem[]' value='$adminarr[$i]' />$adminarr[$i]</p>";
 						}
 					?>
+					
 					<input type='hidden' name='remsub' value='1'>
 					<input type='submit' value='Remove' onclick='return removecheck();' class="button">
 					</form>
@@ -314,7 +461,36 @@ if(isset($_POST['resetvotes'])) {
 				</div>
 			</div>
 		</div>
+		<div class="module_wrapper_small">
+			<div class="module">
+				<h3 onclick="$(this).next('.hidden').slideToggle(200)">
+					Delete an Event
+				</h3>
+				<div class="hidden">
+					<form name='removeevent' action='admin.php' method='post'>
+		         		<?php
+							$events = mysql_query('SELECT* FROM events ORDER BY datetime');
+		               		$numevents = mysql_num_rows($events);
+		               		for ($j = 0; $j < $numevents; $j++) {
+								$event = mysql_fetch_row($events);
+								$eventq = date_create($event[3]);
+								$eventd = date_format($eventq, 'F j, Y @ g:ia');
+								$eventdesc = $event[1]." (".$eventd.")";
+								echo "<p class = 'blogtext'><input type='checkbox' name='remev[]' value='$event[0]' />$eventdesc</p>";
+							}
+						?>
+						<p>
+							<input type='hidden' name='remevent' value='1'>
+						</p>
+						<p>
+							<input type='submit' name='remeve' value='Remove' class="button">
+						</p>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
+	
 	<div class="clear"></div>
 	<div class="center_module">
 		<div class="module">
@@ -324,14 +500,23 @@ if(isset($_POST['resetvotes'])) {
 			<div class="hidden">
 				<form name='blog' action='blog.php' method='post'>
 					<h4>
-						Album
+						Title
+						<input type='text' class="text" name='blogtitle' maxlength='50' size='50'><br><br>
+					<a href="javascipt:'';" onmousedown = 'return addb();' class='addblogstuff'>B</a>
+					<a href="javascipt:'';" onmousedown = 'return addi();' class='addblogstuff'><i>I</i></a>
+					<a href="javascipt:'';" onmousedown = 'return addu();' class='addblogstuff'><u>U</u></a>
+					<a href="javascipt:'';" onclick = 'return addbr();' class='addblogstuff'>Add Line Break</a>
+					<a href="javascipt:'';" onclick = "$('#addblogimg').slideToggle();" class='addblogstuff'>Add Image</a>
+					
+					<div id = 'addblogimg'>
+						URL: <input type = 'text' name = 'imgurl'> &nbsp;
+						Size: <input type = 'radio' name='imgsize' value='small' checked>Small &nbsp;
+						<input type = 'radio' name='imgsize' value='medium'>Medium &nbsp;
+						<input type = 'radio' name='imgsize' value='large'>Large &nbsp; &nbsp;
+						<p onclick='return addabi();' class='addlink'>Add Code</p>
+					</div>
 					</h4>
-					<p>
-						<input type='text' class="text" name='blogtitle' maxlength='50' size='50'>
-					</p>
-					<p>
-						<input type='hidden' name='author' value='<?php echo $_SESSION['logged_user']; ?>'>
-					</p>
+					<input type='hidden' name='author' value='<?php echo $_SESSION['logged_user']; ?>'>
 					<p>
 						<textarea name='content' rows='20' cols='107'></textarea>
 					</p>
@@ -348,8 +533,8 @@ if(isset($_POST['resetvotes'])) {
 				Sister of the Month Results
 			</h3>
 			<div class="hidden">
-				<?
-				$mysql = new mysqli($host, $username, $password, $database);
+				<?php
+				$mysql = new mysqli($host, $username, $password, test_Final_Project);
 
 				$results = $mysql->query("SELECT firstname,num FROM users as u JOIN (SELECT COUNT(*) as num,candidateid FROM votes GROUP BY candidateid) as v ON (u.id = v.candidateid)");
 				$sum = $mysql->query("SELECT COUNT(*) as sum FROM votes");
@@ -365,6 +550,54 @@ if(isset($_POST['resetvotes'])) {
 						<input type='submit' name="resetvotes" class="button" value='Reset Votes'>
 					</p>
 				</form> 
+			</div>
+		</div>
+	</div>
+	<div class="center_module">
+		<div class="module">
+			<h3 onclick="$(this).next('.hidden').slideToggle(200)">
+				View Events
+			</h3>
+			<div class="hidden">
+				<?php
+					$alleventsq = mysql_query('SELECT* FROM events ORDER BY datetime');
+					$numevents = mysql_num_rows($alleventsq);
+					if ($numevents == 0) {
+						echo "There are currently no events scheduled!";
+					}
+					else {
+					for ($i = 0; $i < $numevents; $i++) {
+						$currevent = mysql_fetch_row($alleventsq);
+						$curreventq = date_create($currevent[3]);
+						$curreventd = date_format($curreventq, 'l, F j, Y @ g:ia');
+						echo "<div class = 'module'>
+								<div class='eventstitle'>
+									$currevent[1]
+									<div class = 'author'> 
+										$curreventd
+									</div>
+								</div>";
+							if (mysql_result($admin, 0) == 1) {
+								echo "<form name='editevent' action='editevent.php' method='post'>
+									<input type='submit' value='Edit' class = 'edit'>
+									<input type='hidden' name='editid' value='$currevent[0]'>
+								</form>";
+							}
+							echo "</h3>
+									<h4 class='loctext'>
+										$currevent[2]
+									</h4>";
+							if ($currevent[4] == null) {
+								echo "<p class='blogtext'>No one is currently attending!</p>
+							</div>";
+							}
+							else {
+								echo "<p class='blogtext'>".$currevent[4]."</p>
+							</div>";
+							}
+						}
+						}
+					?>
 			</div>
 		</div>
 	</div>
