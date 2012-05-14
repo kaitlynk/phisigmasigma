@@ -526,11 +526,18 @@ a.photo_holder img {
 .blogtext {
 	font-family: verdana;
 	font-size: 12.5px;
+	margin-left: 5px;
+	vertical-align: top;
+	padding: 5px 5px 5px 5px;
 }
 .loctext {
 	font-size: 12.5px;
 	font-weight: 400;
 	font-family: verdana;
+	display: inline;
+	white-space: nowrap;
+	float: right;
+	margin-top: 5px;
 }
 .date {
 	font-size: 14px;
@@ -564,4 +571,7 @@ a.photo_holder img {
 .inline {
 	display: inline;
 }
-
+.dispevpic {
+	width: 200px;
+	margin-top: 5px;
+}

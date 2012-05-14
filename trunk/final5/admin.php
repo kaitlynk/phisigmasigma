@@ -34,10 +34,10 @@ if(isset($_POST['addphoto']) && isset($_FILES['photo'])) {
 	}
 }
 if (isset($_POST['newuser']) && isset($_POST['newpw'])) {
-	$newuser = $_POST['newuser'];
-	$firstname = $_POST['firstname'];
-	$lastname = $_POST['lastname'];
-	$newpw = md5($_POST['newpw']);
+	$newuser = mysql_real_escape_string($_POST['newuser']);
+	$firstname = mysql_real_escape_string($_POST['firstname']);
+	$lastname = mysql_real_escape_string($_POST['lastname']);
+	$newpw = mysql_real_escape_string(md5($_POST['newpw']));
 	$users = mysql_query('SELECT username FROM users');
 	$numusers = mysql_num_rows($users);
 	$alreadyexists = false;
@@ -94,9 +94,9 @@ if(isset($_POST['resetvotes'])) {
 	$message = "<p>The votes have been reset.</p>";
 }
 
-if (isset($_POST['createevent']) || isset($_POST['edited'])) {
-	$ename = $_POST['eventname'];
-	$eloc = $_POST['eventloc'];
+if (isset($_POST['createevent']) || isset($_POST['edited'])) {	
+	$ename = mysql_real_escape_string($_POST['eventname']);
+	$eloc = mysql_real_escape_string($_POST['eventloc']);
 	$etime = $_POST['eventtime'];
 	date_default_timezone_set("America/New_York");
 	$month = $_POST['month'];
@@ -104,39 +104,59 @@ if (isset($_POST['createevent']) || isset($_POST['edited'])) {
 	$year = $_POST['year'];
 	$hour = $_POST['hour'];
 	$mins = $_POST['mins'];
-	
+		
 	if ($hour > 12 || $hour < 1 || $mins > 59 || $mins < 0) {
 		$message = "<p>Please enter a valid time and try again.</p>";
 	}
 	else {
-		$datetime = new DateTime();
-		$datetime = date_date_set($datetime, $year, $month, $date);
-		$ampm = $_POST['ampm'];
-		if ($ampm == "PM") {
-			$hour = $hour + 12;
-		}
-		
-		$datetime = date_time_set($datetime, $hour, $mins);
-		$datetime = date_format($datetime,'Y-m-d H:i:s');
-	
-		if (isset($_POST['public'])) {
-			$epub = 1;
-		}	
-		else {$epub = 0;}
-		
-		if (isset($_POST['createevent'])) {
-			$equery = mysql_query("INSERT INTO events(name, location, datetime, public) VALUES('".$ename."', '".$eloc."', '".$datetime."', '".$epub."')");
-			$message = "<p>Successfully added event!</p>";
-			if (!$equery) {
-				$message = "<p>Event could not be added. Please try again.</p>";
+		if (isset($_FILES['eventpic'])) {
+			include_once("functions.php");
+			$path = uniqid().$_FILES['eventpic']['name'];
+
+			if(cropImage($path, 200, 140, 500, 360) == 'error') {
+				$message = '<p class="error">That file format is not supported</p>';
 			}
-		}
-		else {
-			$id = $_POST['editedid'];
-			$equery = mysql_query("UPDATE events SET name='".$ename."', location='".$eloc."', datetime='".$datetime."', public='".$epub."' WHERE id='".$id."'");
-			$message = "<p>Successfully updated event!</p>";
-			if (!$equery) {
-				$message = "<p>Event could not be edited. Please try again.</p>";
+				
+			else {
+				$longpath = "long_".$path;
+				$datetime = new DateTime();
+				$datetime = date_date_set($datetime, $year, $month, $date);
+				$ampm = $_POST['ampm'];
+				if ($ampm == "PM") {
+					$hour = $hour + 12;
+				}
+					
+				$datetime = date_time_set($datetime, $hour, $mins);
+				$datetime = date_format($datetime,'Y-m-d H:i:s');
+				
+				if (isset($_POST['public'])) {
+					$epub = 1;
+				}	
+			 	else {$epub = 0;}
+					
+				if (isset($_POST['createevent'])) {		
+					$equery = mysql_query("INSERT INTO events(name, location, datetime, public) VALUES('".$ename."', '".$eloc."', '".$datetime."', '".$epub."')");
+					$geteidq = mysql_query("SELECT MAX(id) FROM events");
+					$epquery = mysql_query("INSERT INTO photos(caption, path_small, path_large, dateadded) VALUES('".$ename."', '".$path."', '".$longpath."','".$datetime."')");
+					$geteid = mysql_fetch_row($geteidq);					
+					$getpidq = mysql_query("SELECT id FROM photos WHERE path_small='".$path."'");
+					$getpid = mysql_fetch_row($getpidq);
+					$epquery = mysql_query("INSERT INTO photoInEvent(eventid, photoid) VALUES('".$geteid[0]."','".$getpid[0]."')");
+					$message = "<p>Successfully added event!</p>";
+					if (!epquery) {
+						die('Invalid query: ' . mysql_error());
+						$message = "<p>Event could not be added. Please try again.</p>";
+					}
+				}
+					
+				else {
+					$id = $_POST['editedid'];
+					$equery = mysql_query("UPDATE events SET name='".$ename."', location='".$eloc."', datetime='".$datetime."', public='".$epub."' WHERE id='".$id."'");
+					$message = "<p>Successfully updated event!</p>";
+					if (!$equery) {
+						$message = "<p>Event could not be edited. Please try again.</p>";
+					}
+				}
 			}
 		}
 	}
@@ -346,7 +366,7 @@ if (isset($_POST['remeve'])) {
 					Add an Event
 				</h3>
 				<div class="hidden">
-			        <form name='addevent' action='admin.php' method='post'>
+			        <form name='addevent' action='admin.php' method='post' enctype = 'multipart/form-data'>
 						<h4>Event Name</h4>
 						<p>
 							<input type='text' name='eventname' class="text"/>
@@ -386,6 +406,10 @@ if (isset($_POST['remeve'])) {
 							<option value = 'AM'>AM</option>
 							<option value = 'PM'>PM</option>
 						</select>
+						<h4>Picture:</h4>
+						<p>
+							<input type = 'file' name = 'eventpic' accept = 'image/*'></h4>
+						</p>
 						<p>
 							<input type='checkbox' name='public' value='public'/> Public Event
 						</p>
@@ -428,12 +452,15 @@ if (isset($_POST['remeve'])) {
 						echo "<h4>Administrators</h4>";
 						
 						for ($i = 0; $i < count($adminarr); $i++) {
-							echo "<input type='checkbox' name='rem[]' value='$adminarr[$i]' />$adminarr[$i]</p>";
+							echo "<p><input type='checkbox' name='rem[]' value='$adminarr[$i]' />$adminarr[$i]</p>";
 						}
 					?>
-					
-					<input type='hidden' name='remsub' value='1'>
-					<input type='submit' value='Remove' onclick='return removecheck();' class="button">
+					<p>
+						<input type='hidden' name='remsub' value='1'>
+					</p>
+					<p>
+						<input type='submit' value='Remove' onclick='return removecheck();' class="button">
+					</p>
 					</form>
 				</div>
 			</div>
@@ -561,42 +588,49 @@ if (isset($_POST['remeve'])) {
 			<div class="hidden">
 				<?php
 					$alleventsq = mysql_query('SELECT* FROM events ORDER BY datetime');
+					if (!$alleventsq) {
+    					die('Invalid query: ' . mysql_error());
+					}
 					$numevents = mysql_num_rows($alleventsq);
 					if ($numevents == 0) {
 						echo "There are currently no events scheduled!";
 					}
 					else {
-					for ($i = 0; $i < $numevents; $i++) {
-						$currevent = mysql_fetch_row($alleventsq);
-						$curreventq = date_create($currevent[3]);
-						$curreventd = date_format($curreventq, 'l, F j, Y @ g:ia');
-						echo "<div class = 'module'>
-								<div class='eventstitle'>
-									$currevent[1]
-									<div class = 'author'> 
-										$curreventd
-									</div>
-								</div>";
-							if (mysql_result($admin, 0) == 1) {
-								echo "<form name='editevent' action='editevent.php' method='post'>
-									<input type='submit' value='Edit' class = 'edit'>
-									<input type='hidden' name='editid' value='$currevent[0]'>
-								</form>";
+						for ($i = 0; $i < $numevents; $i++) {
+								$currevent = mysql_fetch_row($alleventsq);
+								$curreventq = date_create($currevent[3]);
+								$curreventd = date_format($curreventq, 'l, F j, Y @ g:ia');
+								$curreventpidq = mysql_query("SELECT photoid FROM photoInEvent WHERE eventid='".$currevent[0]."'");
+								$curreventpid = mysql_fetch_row($curreventpidq);
+								$curreventpq = mysql_query("SELECT path_small FROM photos WHERE id='".$curreventpid[0]."'");
+								$curreventp = mysql_fetch_row($curreventpq);
+								echo "<div class = 'module'>
+										<div class='eventstitle'>
+											$currevent[1]
+											<div class = 'author'> 
+												$curreventd
+												<div class='loctext'>
+													$currevent[2]
+												</div>
+											</div>
+										</div>";
+										if (mysql_result($admin, 0) == 1) {
+											echo "<form name='editevent' action='editevent.php' method='post'>
+											<input type='submit' value='Edit' class = 'edit'>
+											<input type='hidden' name='editid' value='$currevent[0]'>
+											</form>";
+										}
+										echo "<table><tr><td>
+											<img class = 'dispevpic' src = 'photos/".$curreventp[0]."'></td>";
+								if (!($currevent[4] == null)) {
+									echo "<td class = 'blogtext'>RSVP'd: ".$currevent[4]."</td>";
+								}
+								else {
+									echo "<td class='blogtext'>No one is currently attending!</td>";
+								}
 							}
-							echo "</h3>
-									<h4 class='loctext'>
-										$currevent[2]
-									</h4>";
-							if ($currevent[4] == null) {
-								echo "<p class='blogtext'>No one is currently attending!</p>
-							</div>";
-							}
-							else {
-								echo "<p class='blogtext'>".$currevent[4]."</p>
-							</div>";
-							}
-						}
-						}
+						echo "</tr></table></div>";
+					}
 					?>
 			</div>
 		</div>

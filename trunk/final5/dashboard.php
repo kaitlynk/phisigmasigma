@@ -165,7 +165,7 @@ function process(data) {
 	<div class="header">
 		<div class="center">
 			<h4>
-				Œ¶Œ£Œ£
+				ΦΣΣ
 			</h4>
 						<?php
 			if(!isset($_SESSION['logged_user'])) {
@@ -311,30 +311,32 @@ function process(data) {
 								$currevent = mysql_fetch_row($alleventsq);
 								$curreventq = date_create($currevent[3]);
 								$curreventd = date_format($curreventq, 'l, F j, Y @ g:ia');
+								$curreventpidq = mysql_query("SELECT photoid FROM photoInEvent WHERE eventid='".$currevent[0]."'");
+								$curreventpid = mysql_fetch_row($curreventpidq);
+								$curreventpq = mysql_query("SELECT path_small FROM photos WHERE id='".$curreventpid[0]."'");
+								$curreventp = mysql_fetch_row($curreventpq);
 								echo "<div class = 'module'>
 										<div class='eventstitle'>
 											<input type='checkbox' name='attev[]' value='$currevent[0]' />&nbsp;$currevent[1]
 											<div class = 'author'> 
 												$curreventd
+												<div class='loctext'>
+													$currevent[2]
+												</div>
 											</div>
 										</div>
-										</h3>
-											<h4 class='loctext'>
-												$currevent[2]
-											</h4>";
+										<table><tr><td>
+											<img class = 'dispevpic' src = 'photos/".$curreventp[0]."'></td>";
 								if (!($currevent[4] == null)) {
-									echo "<p class='blogtext'>".$currevent[4]."</p>
-									</div>";
+									echo "<td class = 'blogtext'>RSVP'd: ".$currevent[4]."</td>";
 								}
 								else {
-									echo "<p class='blogtext'>No one is currently attending!</p>
-									</div>";
+									echo "<td class='blogtext'>No one is currently attending!</td>";
 								}
 							}
-						echo "<div id ='right'>
+						echo "</tr></table></div><div id ='right'>
 						<input type='submit' class='button' name='unrsvp' value='unRSVP'>
-						<input type='submit' class='button' name='rsvp' value='RSVP'>
-						</div>
+						<input type='submit' class='button' name='rsvp' value='RSVP'></div>
 						</form>";
 					}
 				?>
