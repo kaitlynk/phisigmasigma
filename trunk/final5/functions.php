@@ -1,4 +1,4 @@
-<?
+<?php
 function cropImage($path, $width, $height, $widthl, $heightl) {
 	$extension = strrchr($path, '.');
   

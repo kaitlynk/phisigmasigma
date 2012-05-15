@@ -1,11 +1,3 @@
-function toggleview(elementid) {
-	var change = document.getElementById(elementid);
-	if (change.style.display == "block") {
-		change.style.display="none";
-	}
-	else {change.style.display='block';}
-}
-
 function addcheck() {
 	if (document.adduser.newuser.value == "" || document.adduser.newpw.value == "") {
 		alert('Please enter all fields.');
@@ -16,6 +8,13 @@ function addcheck() {
 function usercheck() {
 	if (document.login.username.value == "" || document.login.pw.value == "") {
 		alert('Please enter both a username and password.');
+		return false;
+	}
+}
+
+function checkedite() {
+	if (document.editevent.eventname.value == "" || document.editevent.eventloc.value == "" || document.editevent.year.value == "" || document.editevent.hour.value == "" || document.editevent.mins.value == "") {
+		alert('Please enter all fields.');
 		return false;
 	}
 }
