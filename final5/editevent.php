@@ -83,15 +83,22 @@ include_once('db.inc');
 				$eventq = mysql_query("SELECT* FROM events WHERE id='".$id."'");
 				$event = mysql_fetch_row($eventq);
 				$dateq = date_create($event[3]);
-				$date = date_format($dateq, 'l, F j, Y @ g:ia');
+				$date = date_format($dateq, 'l, F j, Y');
+				$hour = date_format($dateq,'H');
+				$mins = date_format($dateq,'i');
+				$year = date_format($dateq, 'Y');
+				$ampm = date_format($dateq, 'tt');
+				if ($hour > 12) {
+					$hour -= 12;
+				}
 			?>
 
-			<form name='editevent' action='admin.php' method='post'>
+			<form name='editevent' action='admin.php' method='post' enctype = 'multipart/form-data'>
 				<h4>
 					Title <input type='text' name='eventname' maxlength='50' size='50' value='<?php echo $event[1]?>' class='text'>
 				</h4>
 				<h4>
-					Title <input type='text' name='eventloc' maxlength='100' size='100' value='<?php echo $event[2]?>' class='text'>
+					Location <input type='text' name='eventloc' maxlength='100' size='100' value='<?php echo $event[2]?>' class='text'>
 				</h4>
 				<h4>
 					Date <form name = 'dateofe' method = 'POST' action = 'mainck.php'>
@@ -116,18 +123,29 @@ include_once('db.inc');
 								}
 							?>
 						</select>
-						<input type = 'text' name = 'year' maxlength = '4' size = '4' class='yeartext'>
+						<input type = 'text' name = 'year' maxlength = '4' size = '4' class='yeartext' value='<?php echo $year; ?>'>
 						<div class='author'> (originally on <?php echo $date; ?>) </div>
 					</h4>
 						<h4>Time
-						<input type = 'text' name = 'hour' maxlength = '2' size = '2' class='timetxt' id = 'hour'>
+						<input type = 'text' name = 'hour' maxlength = '2' size = '2' class='timetxt' id = 'hour' value='<?php echo $hour; ?>'>
 						:&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type = 'text' name = 'mins' maxlength = '2' size = '2' class='timetxt' id = 'mins'>
-						<select name = 'ampm'>
-							<option value = 'AM'>AM</option>
-							<option value = 'PM'>PM</option>
-						</select>
+						<input type = 'text' name = 'mins' maxlength = '2' size = '2' class='timetxt' id = 'mins' value='<?php echo $mins; ?>'>
+						
+						<?php if ($ampm == 'AM') {
+							echo "<select name = 'ampm'>
+								<option value = 'AM' selected='selected'>AM</option>
+								<option value = 'PM'>PM</option>
+							</select>";
+							}
+							else {
+								echo "<select name = 'ampm'>
+									<option value = 'AM'>AM</option>
+									<option value = 'PM' selected='selected'>PM</option>
+								</select>";
+							}
+						?>
 						</h4>
+						<h4>New Photo <input type = 'file' name = 'eventpic' accept = 'image/*'></h4>
 						<p>
 							<input type='checkbox' name='public' value='public'/> Public Event
 						</p>
@@ -138,7 +156,7 @@ include_once('db.inc');
 						<input type='hidden' name='edited' value='edited'>
 					</p>
 					<p>
-						<input type='submit' value='Edit Event' class='button'>
+						<input type='submit' value='Edit Event' class='button' onclick='return checkedite();'>
 					</p>
 				</h4>
 			</form> 
